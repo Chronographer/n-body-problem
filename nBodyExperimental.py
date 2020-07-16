@@ -3,10 +3,10 @@ import numpy as np
 import planetaryData
 
 
-def run(planetObjectList, axisLength, maxTrailLength, trailRadius, targetFrameRate, timeStep, vPlot, numPlot, endTime):
-    xAxis = curve(pos=[vector(0, 0, 0), vector(axisLength, 0, 0)], color=color.red)
-    yAxis = curve(pos=[vector(0, 0, 0), vector(0, axisLength, 0)], color=color.green)
-    zAxis = curve(pos=[vector(0, 0, 0), vector(0, 0, axisLength)], color=color.blue)
+def run(planetObjectList, targetFrameRate, timeStep, endTime):
+    xAxis = curve(pos=[vector(0, 0, 0), vector(1, 0, 0)], color=color.red)
+    yAxis = curve(pos=[vector(0, 0, 0), vector(0, 1, 0)], color=color.green)
+    zAxis = curve(pos=[vector(0, 0, 0), vector(0, 0, 1)], color=color.blue)
     currentTime = 0.0
 
     planetDistanceList = []  # list containing n lists, one for each planetObject. Each interior list contains the distance between itself and every other planet object
@@ -89,7 +89,6 @@ def run(planetObjectList, axisLength, maxTrailLength, trailRadius, targetFrameRa
 
         for index in range(len(planetObjectList)):  # computes the acceleration vector between each planet object and every other planetObject. Note: I combined the chunk that computes the unit position vector and the following chunk which computes the acceleration vectors into this single chunk.
             currentPlanetObject = planetObjectList[index]  # Note: This chunk appears to be working correctly and matches what I see in threeBodyProblem.py (for the first timestep at least)
-            # currentPlanetUnitPositionVectorList = planetUnitVectorList[index]
             currentPlanetAccelerationList = planetAccelerationList[index]
             currentPlanetAccelerationVectorList = planetAccelerationVectorList[index]
             currentPlanetAccelerationVectorList.clear()
@@ -104,13 +103,9 @@ def run(planetObjectList, axisLength, maxTrailLength, trailRadius, targetFrameRa
                     else:
                         accelerationVector = "self"
                         currentPlanetAccelerationVectorList.append(accelerationVector)
-                    # currentPlanetUnitPositionVectorList.append(unitPositionVector)
                 else:  # make the acceleration vector between a planetObject and itself something that cannot possibly be accidentally used in a mathematical operation.
-                    # unitPositionVector = "self"
-                    # currentPlanetUnitPositionVectorList.append(unitPositionVector)
                     accelerationVector = "self"
                     currentPlanetAccelerationVectorList.append(accelerationVector)
-            # planetUnitVectorList[index] = currentPlanetUnitPositionVectorList
             planetAccelerationVectorList[index] = currentPlanetAccelerationVectorList
 
         for index in range(len(planetObjectList)):  # adds all acceleration vectors associated with each planetObject together. NOTE: This works as expected for the first frame at least.
