@@ -3,17 +3,11 @@ import numpy as np
 import planetaryData
 
 
-def run(planetObjectList, axisLength, sphereSizeList, maxTrailLength, trailRadius, targetFrameRate, timeStep, vPlot, numPlot, endTime):
+def run(planetObjectList, axisLength, maxTrailLength, trailRadius, targetFrameRate, timeStep, vPlot, numPlot, endTime):
     xAxis = curve(pos=[vector(0, 0, 0), vector(axisLength, 0, 0)], color=color.red)
     yAxis = curve(pos=[vector(0, 0, 0), vector(0, axisLength, 0)], color=color.green)
     zAxis = curve(pos=[vector(0, 0, 0), vector(0, 0, axisLength)], color=color.blue)
     currentTime = 0.0
-
-    planetSphereList = []
-    for index in range(len(planetObjectList)):
-        planetObject = planetObjectList[index]
-        planetSphere = sphere(pos=planetObject.position, radius=sphereSizeList[index], color=color.green)
-        planetSphereList.append(planetSphere)
 
     planetDistanceList = []  # list containing n lists, one for each planetObject. Each interior list contains the distance between itself and every other planet object
     for index in range(len(planetObjectList)):
@@ -45,10 +39,6 @@ def run(planetObjectList, axisLength, sphereSizeList, maxTrailLength, trailRadiu
         planetTotalAccelerationVector = vector(0, 0, 0)
         planetTotalAccelerationVectorList.append(planetTotalAccelerationVector)
 
-    if maxTrailLength != -2:
-        for index in range(len(planetSphereList)):
-            planetSphere = planetSphereList[index]
-            planetSphere.trail = curve(pos=planetSphere.pos, color=color.red, radius=trailRadius, retain=maxTrailLength, interval=30)
     gravitationalConstant = (4 * np.pi ** 2) / planetaryData.sunMass
 
     while currentTime < endTime:
@@ -136,18 +126,7 @@ def run(planetObjectList, axisLength, sphereSizeList, maxTrailLength, trailRadiu
             currentPlanetTotalAccelerationVector = planetTotalAccelerationVectorList[index]
             currentPlanetObject = planetObjectList[index]
             currentPlanetObject.velocity = currentPlanetObject.velocity + (currentPlanetTotalAccelerationVector * timeStep)
-            currentPlanetObject.position = currentPlanetObject.position + (currentPlanetObject.velocity * timeStep)
+            currentPlanetObject.move(currentPlanetObject.position + (currentPlanetObject.velocity * timeStep))
 
         currentTime = currentTime + timeStep
-
-        for index in range(len(planetSphereList)):  # updates the graphical position of each of the planetObjects.
-            currentPlanetSphere = planetSphereList[index]
-            currentPlanetObject = planetObjectList[index]
-            currentPlanetSphere.pos = currentPlanetObject.position
-
-        if maxTrailLength != -2:  # if trails are enabled, add a new segment to the trails of each of the planet spheres.
-            for index in range(len(planetSphereList)):
-                currentPlanetSphere = planetSphereList[index]
-                currentPlanetSphere.trail.append(currentPlanetSphere.pos)
-
         rate(targetFrameRate)
