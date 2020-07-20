@@ -9,6 +9,19 @@ def run(planetObjectList, targetFrameRate, timeStep, endTime):
     zAxis = curve(pos=[vector(0, 0, 0), vector(0, 0, 1)], color=color.blue)
     currentTime = 0.0
 
+    sun = planetObjectList[0]
+
+    totalPlanetMomentum = vector(0, 0, 0)
+    positionOffsetThing = 0
+    for i in range(1, len(planetObjectList)):  # start at 1 because 0 is the sun itself
+        planet = planetObjectList[i]
+        totalPlanetMomentum = totalPlanetMomentum + (planet.mass * planet.velocity)
+        positionOffsetThing = positionOffsetThing + (planet.mass * planet.position.x)
+    sun.velocity = -totalPlanetMomentum / sun.mass
+    sun.position.x = -positionOffsetThing / sun.mass
+    print(sun.velocity)
+    print(sun.position)
+
     planetDistanceList = []  # list containing n lists, one for each planetObject. Each interior list contains the distance between itself and every other planet object
     for index in range(len(planetObjectList)):
         distanceToOtherPlanetObjectList = []
