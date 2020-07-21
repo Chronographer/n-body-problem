@@ -1,6 +1,6 @@
 from vpython import vector, sphere, color
 import numpy as np
-traceInterval = 30  # number of time steps to wait between updating the trace. Has no effect when maxTrailLength is -2.
+traceInterval = 10  # number of time steps to wait between updating the trace. Has no effect when maxTrailLength is -2.
 
 
 class planet:
